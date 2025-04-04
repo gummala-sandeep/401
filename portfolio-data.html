@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #ffffff;
+            text-align: center;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        .form-box {
+            border-radius: 15px;
+            width: 35%;
+            background: #f7f7f7;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            justify-content: space-around;
+            box-shadow: 0px 10px 30px rgba(255, 81, 47, 0.3);
+            animation: slideUp 1s ease-in-out;
+        }
+        h1 {
+            font-size: 2.2em;
+            background: linear-gradient(135deg, #ff512f, #dd2476);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+        input, textarea {
+            width: 80%;
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            outline: none;
+            font-size: 1em;
+        }
+        textarea {
+            height: 80px;
+            resize: none;
+        }
+        .btn {
+            width: 85%;
+            padding: 12px;
+            border-radius: 40px;
+            font-size: 18px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ff512f, #dd2476);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0px 15px 30px rgba(255, 105, 180, 0.6);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <form class="form-box" method="GET" action="/submit-portfolio">
+        <h1>Submit Portfolio</h1>
+        <input type="text" id="username" name="username" placeholder="Username" required>
+        <textarea id="description" name="description" placeholder="Short Description (e.g., Web Developer, App Developer)" required></textarea>
+        <input type="text" id="name" name="name" placeholder="Full Name" required>
+        <input type="email" id="email" name="email" placeholder="Email" required>
+        <input type="date" id="dob" name="dob" required>
+        <input type="text" id="skills" name="skills" placeholder="Skills (e.g., HTML, Java)" required>
+        <input type="text" id="project" name="project" placeholder="Project (e.g., Portfolio Website)" required>
+        <button type="submit" class="btn">Submit</button>
+    </form>
+    <script>
+      document.querySelector(".form-box").addEventListener("submit", function(event) {
+    const username = document.getElementById("username").value;
+    localStorage.setItem("username", username);
+    });
+
+  </script>
+  
+</body>
+</html>

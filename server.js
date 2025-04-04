@@ -28,17 +28,7 @@ app.get('/signup',function(req,res){
 })
 
 app.get('/home',function(req,res){
-    res.sendFile(path.join(__dirname,"main.html"));
-})
-
-app.get('/dashboard/about',function(req,res){
-    res.sendFile(path.join(__dirname,"about.html"));
-})
-app.get('/dashboard/contact',function(req,res){
-    res.sendFile(path.join(__dirname,"contact.html"));
-})
-app.get('/dashboard/help',function(req,res){
-    res.sendFile(path.join(__dirname,"help.html"));
+    res.sendFile(path.join(__dirname,"portfolio-data.html"));
 })
 
 app.get('/checkemail', async function(req,res){
@@ -108,6 +98,49 @@ app.get('/logindata',async function(req,res){
         return res.status(500).send("Internal Server Error");
     }
 })
+
+app.get('/submit-portfolio', async function (req, res) {
+    const { username,description, name, email,dob, skills, project } = req.query;
+
+    try {
+        await db.collection('portfolio').add({
+            username:username,
+            description:description,
+            name:name,
+            email:email,
+            dob:dob,
+            skills:skills,
+            project:project,
+        });
+        console.log("done");
+        return res.send(`
+            <script>
+                alert("Portfolio Submitted Successfully!");
+                window.location.href = "/portfolio";
+            </script>
+        `);
+    } catch (error) {
+        console.error("Error saving data:", error);
+        res.status(500).send("Error submitting portfolio.");
+    }
+});
+
+app.get('/portfolio-data', async function (req, res) {
+    try {
+        const snapshot = await db.collection("portfolio").get();
+        const portfolios = [];
+        snapshot.forEach(doc => portfolios.push(doc.data()));
+        res.json(portfolios);
+    } catch (error) {
+        console.error("Error retrieving portfolio data:", error);
+        res.status(500).json({ error: "Error fetching data" });
+    }
+});
+
+app.get('/portfolio', function (req, res) {
+    res.sendFile(path.join(__dirname, 'portfolio.html'));
+});
+
 
 app.listen(2520,function(){
     console.log("this app is running in 2520");
