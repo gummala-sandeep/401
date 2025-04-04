@@ -1,0 +1,198 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sign Up | Our Platform</title>
+        <style>
+            *{
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: Arial, sans-serif;
+            }
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                background: #ffffff;
+                text-align: center;
+                animation: fadeIn 1.5s ease-in-out;
+            }
+            .login-box {
+                text-align: center;
+                align-items: center;
+                border-radius: 15px;
+                width: 30%;
+                height: 85%;
+                background: #f7f7f7;
+                padding: 40px;
+                box-shadow: 0px 10px 30px rgba(255, 81, 47, 0.3);
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                animation: slideUp 1s ease-in-out;
+            }
+            h1 {
+                font-size: 30px;
+                background: linear-gradient(135deg, #ff512f, #dd2476);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 20px;
+            }
+            input {
+                width: 80%;
+                padding: 12px;
+                border-radius: 10px;
+                border: 1px solid #ccc;
+            }
+            div{
+                width: 100%;
+            }
+            p{
+                padding: 0px;
+                color: red;
+                font-size: 12px;
+                margin-left: 35px;
+                text-align: start;
+                display: none;
+            }
+            .btn {
+                
+                width: 85%;
+                padding: 12px;
+                border-radius: 40px;
+                font-size: 20px;
+                font-weight: bold;
+                background: linear-gradient(135deg, #ff512f, #dd2476);
+                color: white;
+                border: none;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0px 15px 30px rgba(255, 105, 180, 0.6);
+            }
+            .btn:hover::after {
+                margin-left: 15px;
+            }
+            h5 {
+                margin-top: 15px;
+                font-size: 1em;
+                color: #555;
+            }
+            a {
+                color: #ff512f;
+                text-decoration: none;
+                font-weight: bold;
+            }
+            input:hover{
+                border:#ff512f 1px solid;   
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes slideUp {
+                from { transform: translateY(30px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+        </style>
+    </head>
+    <body>
+        <script>
+        function checkUserExists(){
+            var user=document.querySelector("input[name='UserName']").value;
+            var userexist=document.getElementById("user-exist");
+
+            var email = document.querySelector("input[name='Email']").value;
+            var emailError = document.getElementById("email-exist");
+            var signupButton=document.querySelector(".btn");
+
+                fetch(`/checkemail?UserName=${user}&Email=${email}`)
+                    .then(response => response.json())
+                    .then(data => {
+                       
+                        if (data.existmail) {
+                            emailError.style.display = "block";
+                            signupButton.disabled = true; 
+                             signupButton.style.cursor = "not-allowed";
+                        } else {
+                            emailError.style.display = "none";
+                            signupButton.disabled=false;
+                            signupButton.style.cursor="pointer";
+                        }
+                    
+                        
+                        if (data.existuser) {
+                            userexist.style.display = "block";
+                            signupButton.disabled = true; 
+                            signupButton.style.cursor = "not-allowed";
+                        } else {
+                            userexist.style.display = "none";
+                            signupButton.disabled=false;
+                            signupButton.style.cursor="pointer";
+                        }
+                })
+                .catch(error => console.error("Error checking user/email:", error));
+        }
+
+
+            function validatePassword() {
+                var password = document.getElementById("password").value;
+                var confirmPassword = document.getElementById("confirmPassword").value;
+                var errorMessage = document.getElementById("error-message");
+        
+                if (password !== confirmPassword) {
+                    errorMessage.style.display = "block"; 
+                } else {
+                    errorMessage.style.display = "none";
+                }
+            }
+            function isvalidpassword(){
+                var signupButton=document.querySelector(".btn");
+                var password=document.getElementById("password").value;
+                var isvalid=document.getElementById("valid-password");
+                if(password.length<8){
+                    isvalid.style.display="block";
+                    signupButton.disabled=true;
+                }
+                else{
+                    isvalid.style.display="none";
+                    signupButton.disabled=false;
+                }
+            }
+        </script>
+        
+        <form class="login-box" action="/signupdata" method="GET" onsubmit="return validatePassword()">
+            <h1>Sign Up</h1>
+            <div>
+                <input type="text" placeholder="Username" name="UserName" onkeyup="checkUserExists()" required>
+                <p id="user-exist">* username already exists</p>
+            </div>
+            <div>
+                <input type="email" id="mail" placeholder="Email" name="Email"  onkeyup="checkUserExists()" required>
+                <p id="email-exist">* email already exists</p>
+            </div>
+            <div>
+                <input type="password" id="password" placeholder="Enter Password" name="Password" onkeyup="isvalidpassword()" required>
+                <p id="valid-password">* password must contain atleast 8 characters</p>
+            </div>
+            <div>
+                <input type="password" id="confirmPassword" placeholder="Confirm Password" name="ConfirmPassword" onkeyup="validatePassword()" required>
+                <p id="error-message">* passwords do not match</p>
+            </div>
+            <button type="submit" class="btn">Sign Up</button>
+            <h5>Already have an account? <a href="/login">Log in</a></h5>
+        </form>
+        
+    </body>
+    </html>
